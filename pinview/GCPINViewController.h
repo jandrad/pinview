@@ -30,6 +30,8 @@ typedef enum {
 
 typedef BOOL (^GCPasscodeVerifyBlock) (NSString *code);
 
+typedef void (^GCCompletionBlock)();
+
 /*
  
  This class defines a common passcode control that can be dropped into an app.
@@ -51,6 +53,12 @@ typedef BOOL (^GCPasscodeVerifyBlock) (NSString *code);
 
 /*
  
+ Set the text to display below the input area when confirming a set PIN 
+ */
+@property (nonatomic, copy) NSString *confirmText;
+
+ /*
+ 
  Set the text to display below the input area when the passcode fails
  verification.
  
@@ -69,6 +77,13 @@ typedef BOOL (^GCPasscodeVerifyBlock) (NSString *code);
  
  */
 @property (nonatomic, copy) GCPasscodeVerifyBlock verifyBlock;
+
+/*
+ 
+ Called when the view controller has been dismissed.
+ 
+ */
+@property (nonatomic, copy) GCCompletionBlock completionBlock;
 
 /*
  

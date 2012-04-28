@@ -46,11 +46,13 @@
 @synthesize errorLabel = __errorLabel;
 @synthesize inputField = __inputField;
 @synthesize messageText = __messageText;
+@synthesize confirmText = __confirmText;
 @synthesize errorText = __errorText;
 @synthesize labels = __labels;
 @synthesize mode = __mode;
 @synthesize text = __text;
 @synthesize verifyBlock = __verifyBlock;
+@synthesize completionBlock = __completionBlock;
 
 #pragma mark - object methods
 - (id)initWithNibName:(NSString *)nib bundle:(NSBundle *)bundle mode:(GCPINViewControllerMode)mode {
@@ -89,6 +91,7 @@
     self.labels = nil;
     self.text = nil;
     self.verifyBlock = nil;
+    self.completionBlock = nil;
 	
     // super
     [super dealloc];
@@ -125,7 +128,7 @@
     __dismiss = YES;
     dispatch_time_t time = dispatch_time(DISPATCH_TIME_NOW, kGCPINViewControllerDelay * NSEC_PER_SEC);
     dispatch_after(time, dispatch_get_main_queue(), ^(void){
-        [self dismissModalViewControllerAnimated:YES];
+        [self dismissViewControllerAnimated:YES completion:self.completionBlock];
         [[UIApplication sharedApplication] endIgnoringInteractionEvents];
     });
 }
@@ -156,6 +159,11 @@
     self.inputField.autocorrectionType = UITextAutocorrectionTypeNo;
     self.inputField.autocapitalizationType = UITextAutocapitalizationTypeNone;
     [self.inputField becomeFirstResponder];
+    
+    self.navigationItem.rightBarButtonItem = [[[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Cancelar", @"Cancel button") 
+                                                                               style:UIBarButtonSystemItemCancel
+                                                                              target:self action:@selector(dismiss)] autorelease];
+
 	
 }
 - (void)viewDidUnload {
@@ -200,6 +208,12 @@
             if (self.mode == GCPINViewControllerModeCreate) {
                 if (self.text == nil) {
                     self.text = self.inputField.text;
+                    
+                    // Display confirm text if it's been set
+                    if ( self.confirmText != nil ) {
+                        self.messageLabel.text = self.confirmText;
+                    }
+                        
                     [self resetInput];
                 }
                 else {
@@ -208,6 +222,8 @@
                         [self dismiss];
                     }
                     else {
+                        // Reinstate original message text
+                        self.messageLabel.text = self.messageText;
                         [self wrong];
                     }
                 }
