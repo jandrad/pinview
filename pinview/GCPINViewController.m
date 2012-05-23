@@ -160,9 +160,9 @@
     self.inputField.autocapitalizationType = UITextAutocapitalizationTypeNone;
     [self.inputField becomeFirstResponder];
     
-    self.navigationItem.rightBarButtonItem = [[[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Cancelar", @"Cancel button") 
-                                                                               style:UIBarButtonSystemItemCancel
-                                                                              target:self action:@selector(dismiss)] autorelease];
+    self.navigationItem.rightBarButtonItem = [[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel 
+                                                                                            target:self 
+                                                                                            action:@selector(dismiss)] autorelease];
 
 	
 }
